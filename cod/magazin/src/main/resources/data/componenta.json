@@ -1,0 +1,12 @@
+[
+  {
+    "nume": "Placa de bază ASUS",
+    "categorie": "Hardware",
+    "pret": 450.99
+  },
+  {
+    "nume": "SSD Samsung 1TB",
+    "categorie": "Storage",
+    "pret": 299.99
+  }
+]
