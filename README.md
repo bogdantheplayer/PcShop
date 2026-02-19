@@ -132,4 +132,26 @@ Built using:
 
 
 
+---
+
+## 📂 Project Structure
+
+---
+
+## 🧩 Tech Stack
+
+| Component | Technology |
+|------------|------------|
+| Backend | Java |
+| Framework | Spring Boot |
+| Security | Spring Security + JWT |
+| ORM | Hibernate (JPA) |
+| Database | MySQL |
+| Frontend | React |
+| HTTP Client | Axios |
+| Styling | CSS |
+| Build Tool | Maven |
+| Package Manager | npm |
+
+---
 
