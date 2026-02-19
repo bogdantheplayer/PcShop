@@ -155,3 +155,50 @@ Built using:
 
 ---
 
+## 🗄 Database Structure
+
+Main tables:
+
+- utilizator
+- produs
+- cos
+- comanda
+- comanda_produs
+
+Relationships:
+
+- One user can have multiple orders
+- One order can contain multiple products
+- Each user has a shopping cart
+
+---
+
+## 📂 Project Structure
+Backend (Spring Boot)
+```bash
+src/
+ ├── controller/
+ ├── service/
+ ├── repository/
+ ├── model/
+ ├── config/
+ ├── security/
+ └── MagazinApplication.java
+
+```
+
+Frontend (React)
+```bash
+src/
+ ├── components/
+ ├── context/
+ ├── App.js
+ └── index.js
+
+```
+
+
+
+
+
+
