@@ -197,6 +197,83 @@ src/
 
 ```
 
+---
+
+## ⚙ Installation & Setup
+### 1️⃣ Backend Setup
+```bash
+Configure application.properties
+spring.datasource.url=jdbc:mysql://localhost:3306/magazin
+spring.datasource.username=root
+spring.datasource.password=your_password
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+Run Backend
+```bash
+mvn spring-boot:run
+```
+
+Server runs on:
+```bash
+http://localhost:8080
+```
+### 2️⃣ Frontend Setup
+```bash
+npm install
+npm start
+```
+
+Frontend runs on:
+```bash
+http://localhost:3000
+```
+
+---
+
+## 🔑 Default Admin Account
+
+On application startup, a default admin account is automatically created:
+```bash
+Email: admin@magazin.ro
+Password: admin123
+```
+
+---
+
+## 🔄 API Overview
+Public Endpoints
+
+- GET /api/produse
+
+- POST /api/auth/login
+
+- POST /api/auth/register
+
+Protected Endpoints
+
+- /api/admin/** → ADMIN only
+
+- /api/comenzi/** → Authenticated users
+
+- /api/cos/** → Authenticated users
+
+
+
+---
+
+## Requirements
+
+Make sure the following are installed:
+
+- Java 17+
+- Maven
+- Node.js (v18+ recommended)
+- MySQL Server (running locally on port 3306)
+
+Optional:
+- MySQL Workbench or any SQL client (for database management)
 
 
 
