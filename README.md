@@ -20,7 +20,8 @@ Displays all available products including:
 - Add to Cart button
 
 
-  ### 🔐 Authentication (Login & Register)
+
+### 🔐 Authentication (Login & Register)
 
 
 
