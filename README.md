@@ -43,3 +43,93 @@ Administrators can:
 - View full product list
 
 Access is restricted to users with the ADMIN role.
+
+
+---
+
+## 🚀 Features
+
+### 🔐 Authentication & Authorization (JWT)
+- User registration
+- Secure login
+- Role-based access control (USER, ADMIN)
+- JWT-based authentication
+- Protected /api/admin/** endpoints
+- /api/auth/me endpoint to retrieve current user details
+
+### 📦 Product Management
+
+- Public product listing
+- Create product (Admin only)
+- Update product (Admin only)
+- Delete product (Admin only)
+
+Each product contains:
+
+- Name
+- Description
+- Price
+- Stock
+- Category
+- Manufacturer
+- Specifications
+
+
+### 🛒 Shopping Cart
+
+- Add product to cart
+
+- View cart by user
+
+- Remove product from cart
+
+### 📑 Order Management
+
+- Place order
+
+- View user orders
+
+- View all orders (Admin only)
+
+### 🔒 Security
+
+The backend uses:
+
+- Spring Boot
+
+- Spring Security
+
+- JWT (JSON Web Token)
+
+- BCrypt password hashing
+
+- Custom authentication filter
+
+- CORS configuration
+
+
+
+### 🧠 Backend Architecture
+
+The backend follows a layered architecture:
+```bash
+Controller → Service → Repository → Database
+```
+
+- Controller Layer – Exposes REST APIs
+
+- Service Layer – Business logic
+
+- Repository Layer – Database communication (JPA)
+
+- Entity Layer – Database models
+
+Built using:
+
+- Hibernate (JPA)
+
+- MySQL
+
+
+
+
