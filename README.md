@@ -19,10 +19,12 @@ Displays all available products including:
 - Stock
 - Add to Cart button
 
+<img width="1917" alt="image" src="https://github.com/user-attachments/assets/64c1c32f-f32e-4b01-961b-c7f7e2eda3b5" />
 
 
 ### 🔐 Authentication (Login & Register)
 
+<img width="437"  alt="image" src="https://github.com/user-attachments/assets/688d0d22-6981-4730-b5d0-00c63cd244bc" />
 
 
 Users can:
@@ -31,8 +33,12 @@ Users can:
 - Log in securely
 - Receive a JWT token for authenticated requests
 
+<img width="439"  alt="image" src="https://github.com/user-attachments/assets/3491e166-ac39-423a-9c92-b2b710c99213" />
+
 
 ### 🛠 Admin Dashboard
+
+<img width="1919"  alt="image" src="https://github.com/user-attachments/assets/b9ca81eb-fe4d-4c3d-9a97-34e39ce516f4" />
 
 
 Administrators can:
@@ -44,6 +50,7 @@ Administrators can:
 
 Access is restricted to users with the ADMIN role.
 
+<img width="514"  alt="image" src="https://github.com/user-attachments/assets/4922a3e3-d9e4-40c8-ac34-07b3c22dfd03" />
 
 ---
 
