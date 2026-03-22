@@ -20,6 +20,7 @@ import AdminProdusAdauga from "./components/AdminProdusAdauga";
 import AdminAlegeProdusStergere from "./components/AdminAlegeProdusStergere";
 import AdminComenziList from "./components/AdminComenziList";
 import AdminComandaEdit from "./components/AdminComandaEdit";
+import AiBuilderPage from "./components/AiBuilderPage";
 
 function RequireAdmin({ children }) {
   const u = JSON.parse(localStorage.getItem("user") || "null");
@@ -44,6 +45,8 @@ function App() {
         <Route path="/cont" element={<Cont />} />
         <Route path="/comenzi" element={<Comenzi />} />
         <Route path="/facturare" element={<Facturare />} />
+
+        <Route path="/ai-builder" element={<AiBuilderPage />} />
 
         {/* ADMIN */}
         <Route

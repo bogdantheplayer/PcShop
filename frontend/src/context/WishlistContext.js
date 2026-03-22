@@ -1,13 +1,24 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 export const WishlistContext = createContext();
 
 export const WishlistProvider = ({ children }) => {
-  const [wishlist, setWishlist] = useState([]);
+
+  const [wishlist, setWishlist] = useState(() => {
+    try {
+      const saved = localStorage.getItem("wishlist");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  }, [wishlist]);
 
   const adaugaInWishlist = (produs) => {
     setWishlist((prev) => {
-      // evita duplicate
       if (prev.find((p) => p.id === produs.id)) return prev;
       return [...prev, produs];
     });
@@ -23,7 +34,12 @@ export const WishlistProvider = ({ children }) => {
 
   return (
     <WishlistContext.Provider
-      value={{ wishlist, adaugaInWishlist, stergeDinWishlist, esteInWishlist }}
+      value={{
+        wishlist,
+        adaugaInWishlist,
+        stergeDinWishlist,
+        esteInWishlist,
+      }}
     >
       {children}
     </WishlistContext.Provider>

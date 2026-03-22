@@ -31,7 +31,9 @@ public class SecurityConfig {
             		  .requestMatchers("/api/produse/**").permitAll()
             		  .requestMatchers("/api/comenzi/**").permitAll()
             		  .requestMatchers("/api/cos/**").permitAll()
+            		  .requestMatchers("/api/recomandari/**").permitAll()
             		  .requestMatchers("/api/admin/**").hasRole("ADMIN")
+            		  .requestMatchers("/api/ai-builder/**").permitAll()
             		  .anyRequest().authenticated()
             		)
 

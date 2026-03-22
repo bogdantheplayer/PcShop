@@ -10,6 +10,8 @@ function ProductCard({ produs }) {
   const specificatii = produs.specificatii?.split("\n") || [];
   const esteAdaugat = esteInWishlist(produs.id);
 
+  const areImagine = produs.imagine1 && produs.imagine1.trim() !== "";
+
   return (
     <div
       style={{
@@ -38,9 +40,29 @@ function ProductCard({ produs }) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              overflow: "hidden",
+              borderRadius: "6px",
             }}
           >
-            <p style={{ textAlign: "center" }}>Imagine Produs</p>
+            {areImagine ? (
+              <img
+                src={produs.imagine1}
+                alt={produs.nume}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  display: "block",
+                }}
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  e.currentTarget.parentElement.innerHTML =
+                    '<p style="text-align:center;color:white;">Imagine Produs</p>';
+                }}
+              />
+            ) : (
+              <p style={{ textAlign: "center" }}>Imagine Produs</p>
+            )}
           </div>
 
           <h3 style={{ color: "#ff4d4d" }}>{produs.nume}</h3>

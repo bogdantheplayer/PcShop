@@ -107,7 +107,6 @@ function Header({ onSearch }) {
     <>
       <header style={{ padding: "10px 20px", backgroundColor: "#282c34", color: "#fff" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          {/* logo + search */}
           <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
             <Link to="/" style={{ color: "white", textDecoration: "none" }}>
               <h2>🛒 Magazin</h2>
@@ -127,9 +126,7 @@ function Header({ onSearch }) {
             />
           </div>
 
-          {/* admin + user + wishlist + cos */}
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            {/* Meniu Admin */}
             {isAdmin && (
               <div ref={adminMenuRef} style={{ position: "relative" }}>
                 <button
@@ -169,14 +166,11 @@ function Header({ onSearch }) {
                     >
                       🧭 Panou Admin
                     </Link>
-
-                    
                   </div>
                 )}
               </div>
             )}
 
-            {/* Login / User menu */}
             {user ? (
               <div ref={menuRef} style={{ position: "relative" }}>
                 <button
@@ -270,7 +264,22 @@ function Header({ onSearch }) {
               </button>
             )}
 
-            {/* Wishlist */}
+            <Link to="/ai-builder">
+              <button
+                style={{
+                  backgroundColor: "#6f42c1",
+                  color: "white",
+                  border: "none",
+                  padding: "6px 12px",
+                  borderRadius: "20px",
+                  cursor: "pointer",
+                  fontWeight: "bold",
+                }}
+              >
+                🧠 AI Builder
+              </button>
+            </Link>
+
             <Link to="/wishlist" style={{ position: "relative" }}>
               <button
                 style={{
@@ -304,7 +313,6 @@ function Header({ onSearch }) {
               </button>
             </Link>
 
-            {/* Cos */}
             <Link to="/cos" style={{ position: "relative" }}>
               <button
                 style={{
@@ -341,7 +349,6 @@ function Header({ onSearch }) {
         </div>
       </header>
 
-      {/* modal Login/Register */}
       {showAuthModal && (
         <div
           style={{

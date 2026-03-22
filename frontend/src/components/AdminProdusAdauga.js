@@ -19,6 +19,9 @@ function AdminProdusAdauga() {
     pret: 0,
     stoc: 0,
     specificatii: "",
+    imagine1: "",
+    imagine2: "",
+    imagine3: "",
   });
 
   const handleAuthError = (msg) => {
@@ -192,6 +195,67 @@ function AdminProdusAdauga() {
           />
         </div>
 
+        <div style={row}>
+          <label style={label}>Imagine 1 (URL)</label>
+          <input
+            name="imagine1"
+            value={form.imagine1}
+            onChange={handleChange}
+            style={input}
+            placeholder="https://..."
+          />
+        </div>
+
+        <div style={row}>
+          <label style={label}>Imagine 2 (URL)</label>
+          <input
+            name="imagine2"
+            value={form.imagine2}
+            onChange={handleChange}
+            style={input}
+            placeholder="https://..."
+          />
+        </div>
+
+        <div style={row}>
+          <label style={label}>Imagine 3 (URL)</label>
+          <input
+            name="imagine3"
+            value={form.imagine3}
+            onChange={handleChange}
+            style={input}
+            placeholder="https://..."
+          />
+        </div>
+
+        {(form.imagine1 || form.imagine2 || form.imagine3) && (
+          <div style={{ marginTop: "10px" }}>
+            <div style={{ ...label, marginBottom: "8px" }}>Preview imagini</div>
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+              {[form.imagine1, form.imagine2, form.imagine3]
+                .filter(Boolean)
+                .map((src, idx) => (
+                  <img
+                    key={idx}
+                    src={src}
+                    alt={`Preview ${idx + 1}`}
+                    style={{
+                      width: "150px",
+                      height: "100px",
+                      objectFit: "cover",
+                      borderRadius: "10px",
+                      border: "1px solid #444",
+                      backgroundColor: "#1e1e1e",
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                ))}
+            </div>
+          </div>
+        )}
+
         <button
           type="submit"
           disabled={saving}
@@ -199,7 +263,7 @@ function AdminProdusAdauga() {
             ...btn,
             backgroundColor: "#28a745",
             width: "100%",
-            marginTop: "10px",
+            marginTop: "16px",
           }}
         >
           {saving ? "Se salvează..." : "✅ Adaugă produs"}

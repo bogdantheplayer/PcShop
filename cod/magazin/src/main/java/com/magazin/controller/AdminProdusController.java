@@ -39,6 +39,9 @@ public class AdminProdusController {
         p.setStoc(produs.getStoc());
         p.setSpecificatii(produs.getSpecificatii());
         p.setProducator(produs.getProducator());
+        p.setImagine1(produs.getImagine1());
+        p.setImagine2(produs.getImagine2());
+        p.setImagine3(produs.getImagine3());
 
         return produsRepository.save(p);
     }

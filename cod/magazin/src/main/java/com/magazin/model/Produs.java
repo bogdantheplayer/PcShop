@@ -10,12 +10,24 @@ public class Produs {
     private Long id;
 
     private String nume;
+    
+    @Column(columnDefinition = "TEXT")
     private String descriere;
+    
     private String categorie;
     private double pret;
     private int stoc;
+    
+    @Column(columnDefinition = "TEXT")
     private String specificatii;
+    
     private String producator;
+    
+    
+    
+    private String imagine1;
+    private String imagine2;
+    private String imagine3;
     
 
     // getteri si setteri
@@ -43,5 +55,18 @@ public class Produs {
 
     public String getProducator() { return producator; }
     public void setProducator(String producator) { this.producator = producator; }
+    
+    
+    
+    
+     
+    public String getImagine1() { return imagine1; }
+    public void setImagine1(String imagine1) { this.imagine1 = imagine1; }
+
+    public String getImagine2() { return imagine2; }
+    public void setImagine2(String imagine2) {  this.imagine2 = imagine2; }
+
+    public String getImagine3() {  return imagine3; }
+    public void setImagine3(String imagine3) { this.imagine3 = imagine3; }
 
 }
