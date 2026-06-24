@@ -11,18 +11,16 @@ public class ComandaProdus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // legatura cu comanda
     @ManyToOne
     @JoinColumn(name = "comanda_id")
     @JsonBackReference
     private Comanda comanda;
 
-    // detalii produs
     private String numeProdus;
     private int cantitate;
     private double pret;
 
-    // getteri si setteri
+    
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

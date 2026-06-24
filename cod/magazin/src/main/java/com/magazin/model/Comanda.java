@@ -17,7 +17,6 @@ public class Comanda {
     private double total;
     private LocalDateTime dataComanda;
 
-    // date facturare
     private String adresa;
     private String oras;
     private String judet;
@@ -26,14 +25,12 @@ public class Comanda {
     
     
     
-    // degatura cu produsele din comanda
     @OneToMany(mappedBy = "comanda", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<ComandaProdus> produse;
     
     
 
-    // getteri si setteri
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -68,7 +65,7 @@ public class Comanda {
         this.produse = produse;
         if (produse != null) {
             for (ComandaProdus p : produse) {
-                p.setComanda(this); // legam fiecare produs de comanda
+                p.setComanda(this);
             }
         }
     }

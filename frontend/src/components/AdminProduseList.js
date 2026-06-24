@@ -90,7 +90,7 @@ function AdminProduseList() {
         throw new Error(`Nu s-a putut șterge (HTTP ${res.status}). ${text}`);
       }
 
-      // refresh rapid local
+      // refresh local
       setProduse((prev) => prev.filter((p) => p.id !== id));
     } catch (e) {
       alert(e.message || "Eroare la ștergere.");

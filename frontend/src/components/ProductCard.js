@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import { WishlistContext } from "../context/WishlistContext";
 import { Link } from "react-router-dom";
@@ -7,10 +7,30 @@ function ProductCard({ produs }) {
   const { adaugaInCos } = useContext(CartContext);
   const { adaugaInWishlist, stergeDinWishlist, esteInWishlist } = useContext(WishlistContext);
 
+  const [avgRating, setAvgRating] = useState(0);
+
   const specificatii = produs.specificatii?.split("\n") || [];
   const esteAdaugat = esteInWishlist(produs.id);
 
-  const areImagine = produs.imagine1 && produs.imagine1.trim() !== "";
+  useEffect(() => {
+    let active = true;
+
+    const loadAverage = async () => {
+      try {
+        const res = await fetch(`http://localhost:8080/api/reviews/${produs.id}/average`);
+        const data = await res.json();
+        if (active) setAvgRating(Number(data) || 0);
+      } catch {
+        if (active) setAvgRating(0);
+      }
+    };
+
+    loadAverage();
+
+    return () => {
+      active = false;
+    };
+  }, [produs.id]);
 
   return (
     <div
@@ -40,11 +60,11 @@ function ProductCard({ produs }) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              borderRadius: "8px",
               overflow: "hidden",
-              borderRadius: "6px",
             }}
           >
-            {areImagine ? (
+            {produs.imagine1 ? (
               <img
                 src={produs.imagine1}
                 alt={produs.nume}
@@ -56,8 +76,6 @@ function ProductCard({ produs }) {
                 }}
                 onError={(e) => {
                   e.currentTarget.style.display = "none";
-                  e.currentTarget.parentElement.innerHTML =
-                    '<p style="text-align:center;color:white;">Imagine Produs</p>';
                 }}
               />
             ) : (
@@ -65,7 +83,15 @@ function ProductCard({ produs }) {
             )}
           </div>
 
-          <h3 style={{ color: "#ff4d4d" }}>{produs.nume}</h3>
+          <h3 style={{ color: "#ff4d4d", marginBottom: "6px" }}>{produs.nume}</h3>
+
+          <div style={{ color: "#ffcc66", marginBottom: "8px", fontSize: "14px" }}>
+            {"★".repeat(Math.round(avgRating))}
+            {"☆".repeat(5 - Math.round(avgRating))}
+            {" "}
+            ({avgRating.toFixed(1)})
+          </div>
+
           <p
             style={{
               fontStyle: "italic",
@@ -86,7 +112,7 @@ function ProductCard({ produs }) {
 
       <div>
         <p style={{ fontWeight: "bold", fontSize: "18px" }}>
-          {produs.pret.toFixed(2)} RON
+          {Number(produs.pret).toFixed(2)} RON
         </p>
 
         <button

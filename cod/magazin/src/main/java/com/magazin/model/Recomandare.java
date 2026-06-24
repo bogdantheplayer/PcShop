@@ -13,7 +13,6 @@ public class Recomandare {
     private Long utilizatorId;
     private String motiv;
 
-    // getteri si setteri
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

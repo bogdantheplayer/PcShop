@@ -4,7 +4,6 @@ function Cont() {
   const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({ nume: "", username: "", email: "", telefon: "" });
 
-  // Încarcă user-ul din localStorage
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {

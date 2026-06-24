@@ -13,7 +13,6 @@ public class Cos {
 
     private String status; // ex: "activ", "comandat"
 
-    // getteri si setteri
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

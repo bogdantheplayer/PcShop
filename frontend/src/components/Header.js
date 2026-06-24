@@ -264,6 +264,23 @@ function Header({ onSearch }) {
               </button>
             )}
 
+
+            <Link to="/ghid">
+              <button
+                style={{
+                  backgroundColor: "#17a2b8",
+                  color: "white",
+                  border: "none",
+                  padding: "6px 12px",
+                  borderRadius: "20px",
+                  cursor: "pointer",
+                  fontWeight: "bold",
+                }}
+              >
+                ❓ Ghid
+              </button>
+            </Link>
+
             <Link to="/ai-builder">
               <button
                 style={{

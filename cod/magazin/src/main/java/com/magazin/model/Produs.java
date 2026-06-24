@@ -30,7 +30,6 @@ public class Produs {
     private String imagine3;
     
 
-    // getteri si setteri
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

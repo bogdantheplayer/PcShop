@@ -12,9 +12,34 @@ const PaginaProdus = () => {
   const [err, setErr] = useState("");
   const [imgIndex, setImgIndex] = useState(0);
 
+  const [reviews, setReviews] = useState([]);
+  const [rating, setRating] = useState(5);
+  const [comentariu, setComentariu] = useState("");
+  const [myReview, setMyReview] = useState(null);
+  const [loadingReviews, setLoadingReviews] = useState(true);
+  const [avgRating, setAvgRating] = useState(0);
+  const [editMode, setEditMode] = useState(false);
+
   const { adaugaInCos } = useContext(CartContext);
   const { adaugaInWishlist, stergeDinWishlist, esteInWishlist } =
     useContext(WishlistContext);
+
+  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const token = localStorage.getItem("token");
+
+  const parseJsonSafe = async (res) => {
+    const text = await res.text();
+
+    if (!text || !text.trim()) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(text);
+    } catch {
+      return null;
+    }
+  };
 
   useEffect(() => {
     let active = true;
@@ -26,7 +51,9 @@ const PaginaProdus = () => {
       try {
         const res = await fetch(`http://localhost:8080/api/produse/${id}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+
+        const data = await parseJsonSafe(res);
+
         if (active) {
           setProdus(data);
           setImgIndex(0);
@@ -38,11 +65,83 @@ const PaginaProdus = () => {
       }
     };
 
+    const loadReviews = async () => {
+      setLoadingReviews(true);
+
+      try {
+        const res = await fetch(`http://localhost:8080/api/reviews/${id}`);
+        const data = await parseJsonSafe(res);
+
+        if (active) {
+          setReviews(Array.isArray(data) ? data : []);
+        }
+      } catch {
+        if (active) setReviews([]);
+      } finally {
+        if (active) setLoadingReviews(false);
+      }
+    };
+
+    const loadMyReview = async () => {
+      if (!token) {
+        if (active) setMyReview(null);
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `http://localhost:8080/api/reviews/${id}/my-review`,
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+            },
+          }
+        );
+
+        if (!res.ok) {
+          if (active) setMyReview(null);
+          return;
+        }
+
+        const data = await parseJsonSafe(res);
+
+        if (active) {
+          if (!data || !data.id) {
+            setMyReview(null);
+            return;
+          }
+
+          setMyReview(data);
+          setRating(Number(data.rating) || 5);
+          setComentariu(data.comentariu || "");
+        }
+      } catch {
+        if (active) setMyReview(null);
+      }
+    };
+
+    const loadAverage = async () => {
+      try {
+        const res = await fetch(`http://localhost:8080/api/reviews/${id}/average`);
+        const data = await parseJsonSafe(res);
+
+        if (active) {
+          setAvgRating(Number(data) || 0);
+        }
+      } catch {
+        if (active) setAvgRating(0);
+      }
+    };
+
     load();
+    loadReviews();
+    loadMyReview();
+    loadAverage();
+
     return () => {
       active = false;
     };
-  }, [id]);
+  }, [id, token]);
 
   const esteAdaugat = produs ? esteInWishlist(produs.id) : false;
 
@@ -78,9 +177,148 @@ const PaginaProdus = () => {
     return { text: "În stoc", bg: "#28a745" };
   };
 
+  const recalcAverage = (list) => {
+    const sum = list.reduce((acc, r) => acc + Number(r.rating || 0), 0);
+    return list.length ? sum / list.length : 0;
+  };
+
+  const trimiteReview = async () => {
+  if (!user || !token) {
+    alert("Trebuie să fii logat pentru a adăuga review.");
+    return;
+  }
+
+  if (!comentariu.trim()) {
+    alert("Scrie un comentariu.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`http://localhost:8080/api/reviews/${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        rating,
+        comentariu,
+      }),
+    });
+
+    const text = await res.text();
+    console.log("STATUS REVIEW:", res.status);
+    console.log("BODY REVIEW:", text);
+
+    const data = text ? JSON.parse(text) : null;
+
+    if (!res.ok) {
+      throw new Error(data?.message || `HTTP ${res.status}`);
+    }
+
+    const updatedReviews = [data, ...reviews];
+    setReviews(updatedReviews);
+    setMyReview(data);
+    setComentariu("");
+    setRating(5);
+
+    const sum = updatedReviews.reduce((acc, r) => acc + Number(r.rating || 0), 0);
+    setAvgRating(updatedReviews.length ? sum / updatedReviews.length : 0);
+  } catch (e) {
+    console.error("Eroare review:", e);
+    alert(e.message || "Eroare la salvarea review-ului.");
+  }
+};
+
+  const updateReview = async () => {
+    if (!myReview?.id) {
+      alert("Nu există review de actualizat.");
+      return;
+    }
+
+    if (!comentariu.trim()) {
+      alert("Scrie un comentariu.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`http://localhost:8080/api/reviews/${myReview.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          rating,
+          comentariu,
+        }),
+      });
+
+      const data = await parseJsonSafe(res);
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Eroare la actualizare.");
+      }
+
+      if (!data) {
+        throw new Error("Serverul nu a returnat review-ul actualizat.");
+      }
+
+      setMyReview(data);
+      setEditMode(false);
+
+      const updatedReviews = reviews.map((r) => (r.id === data.id ? data : r));
+      setReviews(updatedReviews);
+      setAvgRating(recalcAverage(updatedReviews));
+    } catch (e) {
+      alert(e.message || "Eroare la editare.");
+    }
+  };
+
+  const deleteReview = async () => {
+    if (!myReview?.id) {
+      alert("Nu există review de șters.");
+      return;
+    }
+
+    if (!window.confirm("Sigur vrei să ștergi review-ul?")) return;
+
+    try {
+      const res = await fetch(`http://localhost:8080/api/reviews/${myReview.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
+
+      const data = await parseJsonSafe(res);
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Eroare la ștergere.");
+      }
+
+      const updatedReviews = reviews.filter((r) => r.id !== myReview.id);
+      setReviews(updatedReviews);
+      setMyReview(null);
+      setEditMode(false);
+      setComentariu("");
+      setRating(5);
+      setAvgRating(recalcAverage(updatedReviews));
+    } catch (e) {
+      alert(e.message || "Eroare la ștergere.");
+    }
+  };
+
   if (loading) {
     return (
-      <div style={{ padding: "20px", color: "white", background: "#1e1e1e", minHeight: "100vh" }}>
+      <div
+        style={{
+          padding: "20px",
+          color: "white",
+          background: "#1e1e1e",
+          minHeight: "100vh",
+        }}
+      >
         Se încarcă produsul...
       </div>
     );
@@ -88,7 +326,14 @@ const PaginaProdus = () => {
 
   if (err || !produs) {
     return (
-      <div style={{ padding: "20px", color: "white", background: "#1e1e1e", minHeight: "100vh" }}>
+      <div
+        style={{
+          padding: "20px",
+          color: "white",
+          background: "#1e1e1e",
+          minHeight: "100vh",
+        }}
+      >
         <button
           onClick={() => navigate(-1)}
           style={{
@@ -103,6 +348,7 @@ const PaginaProdus = () => {
         >
           ◀ Înapoi
         </button>
+
         <div
           style={{
             backgroundColor: "#2a2a2a",
@@ -120,8 +366,22 @@ const PaginaProdus = () => {
   const stock = badgeStock(produs.stoc);
 
   return (
-    <div style={{ padding: "20px", color: "white", background: "#1e1e1e", minHeight: "100vh" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px" }}>
+    <div
+      style={{
+        padding: "20px",
+        color: "white",
+        background: "#1e1e1e",
+        minHeight: "100vh",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "12px",
+        }}
+      >
         <button
           onClick={() => navigate(-1)}
           style={{
@@ -152,7 +412,7 @@ const PaginaProdus = () => {
       </div>
 
       <div
-        className="produs-layout"
+        className="produs-grid"
         style={{
           marginTop: "16px",
           display: "grid",
@@ -174,15 +434,16 @@ const PaginaProdus = () => {
             style={{
               borderRadius: "12px",
               overflow: "hidden",
-              backgroundColor: "#11151b",
-              height: "620px",
+              backgroundColor: "#181a1f",
+              width: "100%",
+              aspectRatio: "4 / 3",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
             <img
-              src={galleryImages[imgIndex]}
+              src={galleryImages[imgIndex] || placeholderImages[0]}
               alt={produs.nume}
               style={{
                 width: "100%",
@@ -197,27 +458,23 @@ const PaginaProdus = () => {
             />
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "10px",
-              marginTop: "12px",
-              flexWrap: "wrap",
-            }}
-          >
+          <div style={{ display: "flex", gap: "10px", marginTop: "12px", flexWrap: "wrap" }}>
             {galleryImages.map((src, i) => (
               <button
                 key={i}
                 onClick={() => setImgIndex(i)}
                 style={{
-                  border: i === imgIndex ? "2px solid #ff9800" : "1px solid rgba(255,255,255,0.15)",
+                  border:
+                    i === imgIndex
+                      ? "2px solid #ff9800"
+                      : "1px solid rgba(255,255,255,0.15)",
                   borderRadius: "10px",
                   padding: "0",
                   cursor: "pointer",
-                  background: "#11151b",
+                  background: "#181a1f",
                   overflow: "hidden",
                   width: "120px",
-                  height: "80px",
+                  height: "75px",
                   flex: "0 0 auto",
                 }}
                 title={`Imagine ${i + 1}`}
@@ -228,7 +485,7 @@ const PaginaProdus = () => {
                   style={{
                     width: "100%",
                     height: "100%",
-                    objectFit: "cover",
+                    objectFit: "contain",
                     display: "block",
                   }}
                   loading="lazy"
@@ -255,6 +512,13 @@ const PaginaProdus = () => {
               {produs.nume}
             </div>
 
+            <div style={{ color: "#ffcc66", fontSize: "18px" }}>
+              {"★".repeat(Math.round(avgRating))}
+              {"☆".repeat(5 - Math.round(avgRating))}
+              {" "}
+              ({avgRating.toFixed(1)})
+            </div>
+
             <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
               <span
                 style={{
@@ -266,6 +530,7 @@ const PaginaProdus = () => {
               >
                 {produs.categorie || "-"}
               </span>
+
               <span
                 style={{
                   backgroundColor: "rgba(255,255,255,0.08)",
@@ -302,11 +567,13 @@ const PaginaProdus = () => {
                 disabled={(Number(produs.stoc) || 0) <= 0}
                 style={{
                   padding: "12px 14px",
-                  backgroundColor: (Number(produs.stoc) || 0) <= 0 ? "#555" : "#28a745",
+                  backgroundColor:
+                    (Number(produs.stoc) || 0) <= 0 ? "#555" : "#28a745",
                   border: "none",
                   borderRadius: "12px",
                   color: "white",
-                  cursor: (Number(produs.stoc) || 0) <= 0 ? "not-allowed" : "pointer",
+                  cursor:
+                    (Number(produs.stoc) || 0) <= 0 ? "not-allowed" : "pointer",
                   fontWeight: 800,
                 }}
               >
@@ -314,7 +581,11 @@ const PaginaProdus = () => {
               </button>
 
               <button
-                onClick={() => (esteAdaugat ? stergeDinWishlist(produs.id) : adaugaInWishlist(produs))}
+                onClick={() =>
+                  esteAdaugat
+                    ? stergeDinWishlist(produs.id)
+                    : adaugaInWishlist(produs)
+                }
                 style={{
                   padding: "12px 14px",
                   backgroundColor: esteAdaugat ? "#ffc107" : "#007bff",
@@ -325,7 +596,9 @@ const PaginaProdus = () => {
                   fontWeight: 800,
                 }}
               >
-                {esteAdaugat ? "★ În wishlist (apasă pentru ștergere)" : "☆ Adaugă în wishlist"}
+                {esteAdaugat
+                  ? "★ În wishlist (apasă pentru ștergere)"
+                  : "☆ Adaugă în wishlist"}
               </button>
             </div>
 
@@ -365,6 +638,199 @@ const PaginaProdus = () => {
                   {produs.specificatii || "—"}
                 </pre>
               </div>
+
+              <div
+                style={{
+                  marginTop: "18px",
+                  paddingTop: "18px",
+                  borderTop: "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+                <div style={{ fontWeight: 800, marginBottom: "10px", fontSize: "18px" }}>
+                  ⭐ Review-uri
+                </div>
+
+                {loadingReviews ? (
+                  <div style={{ opacity: 0.85 }}>Se încarcă review-urile...</div>
+                ) : reviews.length === 0 ? (
+                  <div style={{ opacity: 0.85, marginBottom: "16px" }}>
+                    Nu există review-uri încă.
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "10px",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    {reviews.map((r) => (
+                      <div
+                        key={r.id}
+                        style={{
+                          backgroundColor: "#1b1d22",
+                          borderRadius: "12px",
+                          padding: "12px",
+                          border: "1px solid rgba(255,255,255,0.08)",
+                        }}
+                      >
+                        <div style={{ fontWeight: "bold", marginBottom: "4px" }}>
+                          {r.username || "Utilizator"}
+                        </div>
+
+                        <div style={{ color: "#ffcc66", marginBottom: "6px" }}>
+                          {"★".repeat(Number(r.rating) || 0)}
+                          {"☆".repeat(5 - (Number(r.rating) || 0))}
+                        </div>
+
+                        <div style={{ opacity: 0.92, lineHeight: 1.5 }}>
+                          {r.comentariu}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {!user ? (
+                  <div style={{ opacity: 0.85 }}>
+                    Trebuie să fii logat pentru a adăuga un review.
+                  </div>
+                ) : myReview && !editMode ? (
+                  <div
+                    style={{
+                      backgroundColor: "#1f2d1f",
+                      borderRadius: "12px",
+                      padding: "12px",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                    }}
+                  >
+                    <div style={{ marginBottom: "10px" }}>
+                      Ai adăugat deja un review pentru acest produs.
+                    </div>
+
+                    <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                      <button
+                        onClick={() => {
+                          setEditMode(true);
+                          setRating(Number(myReview.rating) || 5);
+                          setComentariu(myReview.comentariu || "");
+                        }}
+                        style={{
+                          backgroundColor: "#007bff",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "10px",
+                          padding: "10px 14px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        ✏️ Editează
+                      </button>
+
+                      <button
+                        onClick={deleteReview}
+                        style={{
+                          backgroundColor: "#dc3545",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "10px",
+                          padding: "10px 14px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        🗑️ Șterge
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      backgroundColor: "#1b1d22",
+                      borderRadius: "12px",
+                      padding: "12px",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                    }}
+                  >
+                    <div style={{ fontWeight: 700, marginBottom: "10px" }}>
+                      {editMode ? "Editează review" : "Adaugă review"}
+                    </div>
+
+                    <select
+                      value={rating}
+                      onChange={(e) => setRating(Number(e.target.value))}
+                      style={{
+                        marginBottom: "10px",
+                        padding: "10px",
+                        borderRadius: "8px",
+                        border: "1px solid #444",
+                        backgroundColor: "#111",
+                        color: "white",
+                      }}
+                    >
+                      <option value={5}>5</option>
+                      <option value={4}>4</option>
+                      <option value={3}>3</option>
+                      <option value={2}>2</option>
+                      <option value={1}>1</option>
+                    </select>
+
+                    <textarea
+                      value={comentariu}
+                      onChange={(e) => setComentariu(e.target.value)}
+                      placeholder="Scrie opinia ta despre produs..."
+                      style={{
+                        width: "100%",
+                        minHeight: "100px",
+                        padding: "10px",
+                        borderRadius: "8px",
+                        border: "1px solid #444",
+                        backgroundColor: "#111",
+                        color: "white",
+                        resize: "vertical",
+                        marginBottom: "10px",
+                      }}
+                    />
+
+                    <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                      <button
+                        onClick={editMode ? updateReview : trimiteReview}
+                        style={{
+                          backgroundColor: "#28a745",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "10px",
+                          padding: "10px 14px",
+                          cursor: "pointer",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {editMode ? "Salvează modificările" : "Trimite review"}
+                      </button>
+
+                      {editMode && (
+                        <button
+                          onClick={() => {
+                            setEditMode(false);
+                            setRating(Number(myReview?.rating) || 5);
+                            setComentariu(myReview?.comentariu || "");
+                          }}
+                          style={{
+                            backgroundColor: "#6c757d",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "10px",
+                            padding: "10px 14px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Renunță
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -372,7 +838,7 @@ const PaginaProdus = () => {
 
       <style>{`
         @media (max-width: 980px) {
-          .produs-layout {
+          .produs-grid {
             grid-template-columns: 1fr !important;
           }
         }

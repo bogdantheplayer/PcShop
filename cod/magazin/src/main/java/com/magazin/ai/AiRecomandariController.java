@@ -19,8 +19,8 @@ public class AiRecomandariController {
     private final ProdusRepository produsRepository;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private final String AI_URL = "http://127.0.0.1:4891/v1/chat/completions";
-    private final String MODEL_NAME = "Nous-Hermes-2-Mistral-7B-DPO";
+    private static final String AI_URL = "http://localhost:11434/api/chat";
+    private static final String MODEL_NAME = "llama3";
 
     public AiRecomandariController(ProdusRepository produsRepository) {
         this.produsRepository = produsRepository;
@@ -56,14 +56,25 @@ public class AiRecomandariController {
 
         Map<String, Object> body = new HashMap<>();
         body.put("model", MODEL_NAME);
+        body.put("stream", false);
         body.put("messages", List.of(
-                Map.of("role", "system", "content",
-                        "You are a shopping recommendation engine. Follow the output format exactly."),
+                Map.of(
+                        "role", "system",
+                        "content", """
+                                You are a shopping recommendation engine.
+                                Follow the required output format exactly.
+                                Return only one line in the format:
+                                IDS: id1,id2,id3,id4,id5,id6
+                                Do not add explanations.
+                                """
+                ),
                 Map.of("role", "user", "content", prompt)
         ));
-        body.put("temperature", 0.2);
-        body.put("top_p", 0.9);
-        body.put("max_tokens", 160);
+        body.put("options", Map.of(
+                "temperature", 0.2,
+                "top_p", 0.9,
+                "num_predict", 120
+        ));
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -76,17 +87,16 @@ public class AiRecomandariController {
                     Map.class
             );
 
-            Map responseBody = response.getBody();
-            if (responseBody == null || responseBody.get("choices") == null) {
+            Map<?, ?> responseBody = response.getBody();
+            if (responseBody == null || responseBody.get("message") == null) {
                 System.out.println("AI recomandari: raspuns gol.");
                 return fallbackFull(allCandidates, cartCategories, preferredCategories);
             }
 
-            Map choice = (Map) ((List) responseBody.get("choices")).get(0);
-            Map message = (Map) choice.get("message");
-            String content = (String) message.get("content");
+            Map<?, ?> message = (Map<?, ?>) responseBody.get("message");
+            String content = message.get("content") == null ? "" : message.get("content").toString();
 
-            System.out.println("AI RAW RESPONSE recomandari:");
+            System.out.println("OLLAMA RAW RESPONSE recomandari:");
             System.out.println(content);
 
             List<Long> ids = extractIds(content, shortlist);
@@ -150,28 +160,28 @@ public class AiRecomandariController {
                 : String.join(", ", preferredCategories);
 
         return """
-        User cart categories:
-        %s
+                User cart categories:
+                %s
 
-        Preferred complementary categories:
-        %s
+                Preferred complementary categories:
+                %s
 
-        Choose EXACTLY 6 product IDs from the list below.
+                Choose EXACTLY 6 product IDs from the list below.
 
-        Rules:
-        - strongly prefer complementary categories
-        - avoid repeating categories already present in the cart
-        - maximum 1 product from the same category already in cart
-        - do not invent products
-        - use only IDs from the list
-        - prefer a balanced PC build
+                Rules:
+                - strongly prefer complementary categories
+                - avoid repeating categories already present in the cart
+                - maximum 1 product from the same category already in cart
+                - do not invent products
+                - use only IDs from the list
+                - prefer a balanced PC build
 
-        Answer ONLY like this:
-        IDS: id1,id2,id3,id4,id5,id6
+                Answer ONLY like this:
+                IDS: id1,id2,id3,id4,id5,id6
 
-        Products:
-        %s
-        """.formatted(cartText, preferredText, buildCompactList(shortlist));
+                Products:
+                %s
+                """.formatted(cartText, preferredText, buildCompactList(shortlist));
     }
 
     private List<Produs> buildShortlist(List<Produs> candidates,

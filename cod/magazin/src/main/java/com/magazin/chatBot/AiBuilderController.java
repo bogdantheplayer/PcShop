@@ -19,8 +19,8 @@ public class AiBuilderController {
     private final ProdusRepository produsRepository;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private final String AI_URL = "http://127.0.0.1:4891/v1/chat/completions";
-    private final String MODEL_NAME = "Nous-Hermes-2-Mistral-7B-DPO";
+    private static final String AI_URL = "http://localhost:11434/api/chat";
+    private static final String MODEL_NAME = "llama3";
 
     public AiBuilderController(ProdusRepository produsRepository) {
         this.produsRepository = produsRepository;
@@ -49,14 +49,28 @@ public class AiBuilderController {
 
         Map<String, Object> body = new HashMap<>();
         body.put("model", MODEL_NAME);
+        body.put("stream", false);
         body.put("messages", List.of(
-                Map.of("role", "system", "content",
-                        "You are a PC builder assistant. Follow the requested output format exactly."),
+                Map.of(
+                        "role", "system",
+                        "content", """
+                                You are a PC builder assistant.
+                                Always reply in Romanian.
+                                Follow the requested output format exactly.
+                                Return sections exactly like:
+                                REPLY: ...
+                                IDS: id1,id2,id3,id4,id5,id6
+                                NOTE: ...
+                                Do not add extra sections.
+                                """
+                ),
                 Map.of("role", "user", "content", prompt)
         ));
-        body.put("temperature", 0.25);
-        body.put("top_p", 0.9);
-        body.put("max_tokens", 220);
+        body.put("options", Map.of(
+                "temperature", 0.25,
+                "top_p", 0.9,
+                "num_predict", 220
+        ));
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -69,16 +83,15 @@ public class AiBuilderController {
                     Map.class
             );
 
-            Map responseBody = response.getBody();
-            if (responseBody == null || responseBody.get("choices") == null) {
+            Map<?, ?> responseBody = response.getBody();
+            if (responseBody == null || responseBody.get("message") == null) {
                 return fallbackResponse(req, allProducts, ctx);
             }
 
-            Map choice = (Map) ((List) responseBody.get("choices")).get(0);
-            Map message = (Map) choice.get("message");
-            String content = (String) message.get("content");
+            Map<?, ?> message = (Map<?, ?>) responseBody.get("message");
+            String content = message.get("content") == null ? "" : message.get("content").toString();
 
-            System.out.println("AI BUILDER RAW RESPONSE:");
+            System.out.println("OLLAMA BUILDER RAW RESPONSE:");
             System.out.println(content);
 
             String reply = extractSection(content, "REPLY");
@@ -151,11 +164,13 @@ public class AiBuilderController {
         - if the budget is small, prefer value products
         - if the budget is high, prefer stronger products
         - keep the reply natural and conversational
+        - REPLY must be in Romanian
+        - NOTE must be in Romanian
 
         Answer EXACTLY in this format:
-        REPLY: short natural answer for the user
+        REPLY: short natural answer in Romanian for the user
         IDS: id1,id2,id3,id4,id5,id6
-        NOTE: short internal note
+        NOTE: short internal note in Romanian
 
         Conversation history:
         %s

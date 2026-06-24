@@ -21,6 +21,8 @@ import AdminAlegeProdusStergere from "./components/AdminAlegeProdusStergere";
 import AdminComenziList from "./components/AdminComenziList";
 import AdminComandaEdit from "./components/AdminComandaEdit";
 import AiBuilderPage from "./components/AiBuilderPage";
+import GhidPage from "./components/GhidPage";
+
 
 function RequireAdmin({ children }) {
   const u = JSON.parse(localStorage.getItem("user") || "null");
@@ -117,6 +119,9 @@ function App() {
             </RequireAdmin>
           }
         />
+
+
+        <Route path="/ghid" element={<GhidPage />} />
 
       </Routes>
 

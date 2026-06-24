@@ -1,6 +1,7 @@
 package com.magazin.security;
 
-import io.jsonwebtoken.Claims;
+import com.magazin.model.Utilizator;
+import com.magazin.repository.UtilizatorRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,19 +9,23 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final UtilizatorRepository utilizatorRepository;
 
-    public JwtAuthFilter(JwtUtil jwtUtil) {
+    public JwtAuthFilter(JwtUtil jwtUtil, UtilizatorRepository utilizatorRepository) {
         this.jwtUtil = jwtUtil;
+        this.utilizatorRepository = utilizatorRepository;
     }
 
     @Override
@@ -30,28 +35,41 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String header = request.getHeader("Authorization");
+        String authHeader = request.getHeader("Authorization");
 
-        if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-            try {
-                Claims claims = jwtUtil.extractAllClaims(token);
-                String email = claims.getSubject();
-                String rol = claims.get("rol", String.class); // ADMIN / USER
+        try {
+            String token = authHeader.substring(7);
+            String email = jwtUtil.extractEmail(token);
+            String rol = jwtUtil.extractRol(token);
 
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(
-                                email,
-                                null,
-                                List.of(new SimpleGrantedAuthority("ROLE_" + rol))
-                        );
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                Optional<Utilizator> optionalUser = utilizatorRepository.findByEmail(email);
 
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                if (optionalUser.isPresent()) {
+                    Utilizator user = optionalUser.get();
 
-            } catch (Exception e) {
-                SecurityContextHolder.clearContext();
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    user,
+                                    null,
+                                    List.of(new SimpleGrantedAuthority("ROLE_" + rol))
+                            );
+
+                    authentication.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
+
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);

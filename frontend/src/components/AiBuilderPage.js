@@ -1,26 +1,63 @@
-import React, { useState, useContext, useRef, useEffect } from "react";
+import React, { useState, useContext, useRef, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 
 function AiBuilderPage() {
   const { adaugaInCos } = useContext(CartContext);
 
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content:
-        "Salut! Sunt AI Builder pentru PC-uri. Spune-mi ce tip de sistem vrei, bugetul, dacă preferi Intel/AMD, NVIDIA/AMD, pentru ce îl folosești și orice alte preferințe ai.",
-    },
-  ]);
+  const initialMessages = useMemo(() => {
+    try {
+      const saved = localStorage.getItem("ai_builder_messages");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {}
+
+    return [
+      {
+        role: "assistant",
+        content:
+          "Salut! Sunt AI Builder pentru PC-uri. Spune-mi ce tip de sistem vrei, bugetul, dacă preferi Intel/AMD, NVIDIA/AMD, pentru ce îl folosești și orice alte preferințe ai.",
+      },
+    ];
+  }, []);
+
+  const initialRecomandari = useMemo(() => {
+    try {
+      const saved = localStorage.getItem("ai_builder_recomandari");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return Array.isArray(parsed) ? parsed : [];
+      }
+    } catch {}
+    return [];
+  }, []);
+
+  const [messages, setMessages] = useState(initialMessages);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [recomandari, setRecomandari] = useState([]);
+  const [recomandari, setRecomandari] = useState(initialRecomandari);
   const messagesEndRef = useRef(null);
   const firstRenderRef = useRef(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("ai_builder_messages", JSON.stringify(messages));
+    } catch {}
+  }, [messages]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("ai_builder_recomandari", JSON.stringify(recomandari));
+    } catch {}
+  }, [recomandari]);
 
   useEffect(() => {
     if (firstRenderRef.current) {
@@ -95,6 +132,23 @@ function AiBuilderPage() {
     }
   };
 
+  const resetBuilder = () => {
+    const defaultMessages = [
+      {
+        role: "assistant",
+        content:
+          "Salut! Sunt AI Builder pentru PC-uri. Spune-mi ce tip de sistem vrei, bugetul, dacă preferi Intel/AMD, NVIDIA/AMD, pentru ce îl folosești și orice alte preferințe ai.",
+      },
+    ];
+
+    setMessages(defaultMessages);
+    setRecomandari([]);
+    setInput("");
+    setLoading(false);
+    localStorage.removeItem("ai_builder_messages");
+    localStorage.removeItem("ai_builder_recomandari");
+  };
+
   return (
     <div
       style={{
@@ -121,10 +175,11 @@ function AiBuilderPage() {
           </p>
         </div>
 
-        <Link to="/" style={{ textDecoration: "none" }}>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
           <button
+            onClick={resetBuilder}
             style={{
-              backgroundColor: "#6c757d",
+              backgroundColor: "#dc3545",
               color: "white",
               border: "none",
               borderRadius: "10px",
@@ -132,9 +187,24 @@ function AiBuilderPage() {
               cursor: "pointer",
             }}
           >
-            ⬅ Înapoi la magazin
+            🗑 Resetează
           </button>
-        </Link>
+
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <button
+              style={{
+                backgroundColor: "#6c757d",
+                color: "white",
+                border: "none",
+                borderRadius: "10px",
+                padding: "10px 14px",
+                cursor: "pointer",
+              }}
+            >
+              ⬅ Înapoi la magazin
+            </button>
+          </Link>
+        </div>
       </div>
 
       <div

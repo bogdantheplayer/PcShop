@@ -1,4 +1,5 @@
 package com.magazin.security;
+
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -14,13 +15,12 @@ import java.util.Map;
 public class JwtUtil {
 
     private final String secret = "MyUltraStrongJWTSecretKey_1234567890!!";
-    private final long expiration = 1000 * 60 * 60; // 1 ora
+    private final long expiration = 1000 * 60 * 60;  // 1 ora
     private final Key key = Keys.hmacShaKeyFor(secret.getBytes());
 
-    // 🔐 TOKEN CU ROL
     public String generateToken(Utilizator user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("rol", user.getRol().name()); // ADMIN / USER
+        claims.put("rol", user.getRol().name());  // ADMIN / USER
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -45,5 +45,20 @@ public class JwtUtil {
 
     public String extractRol(String token) {
         return extractAllClaims(token).get("rol", String.class);
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            extractAllClaims(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public boolean isTokenExpired(String token) {
+        return extractAllClaims(token)
+                .getExpiration()
+                .before(new Date());
     }
 }

@@ -38,7 +38,7 @@ public class UtilizatorController {
 
         utilizator.setNume(userDetails.getNume());
         utilizator.setUsername(userDetails.getUsername());
-        utilizator.setTelefon(userDetails.getTelefon()); // nou
+        utilizator.setTelefon(userDetails.getTelefon());
 
         return utilizatorService.saveUtilizator(utilizator);
     }

@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000") // React
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
     @Autowired
@@ -75,7 +75,7 @@ public class AuthController {
 
             if (optionalUser.isPresent()) {
                 Utilizator user = optionalUser.get();
-                user.setParola(null); // ascund parola manual
+                user.setParola(null);
                 return ResponseEntity.ok(user);
             } else {
                 return ResponseEntity.status(404).body("Utilizatorul nu există");
