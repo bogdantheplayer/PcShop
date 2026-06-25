@@ -81,6 +81,31 @@ Each product contains:
 - Manufacturer
 - Specifications
 
+### ⭐ Wishlist
+
+Users can save products to a wishlist in order to access them later.
+
+Wishlist functionality allows users to:
+
+- Add products to wishlist
+- View saved products
+- Remove products from wishlist
+- Move products from wishlist to cart
+
+### 📝 Product Details & Reviews
+
+Each product has a dedicated details page where users can view more information before adding it to the cart.
+
+The product details page includes:
+
+- Product images
+- Description
+- Category
+- Manufacturer
+- Price
+- Stock
+- Technical specifications
+- User reviews
 
 ### 🛒 Shopping Cart
 
@@ -90,13 +115,64 @@ Each product contains:
 
 - Remove product from cart
 
+
+### 🤖 AI Product Recommendations
+
+The shopping cart includes AI-based product recommendations.
+
+Based on the products already added to the cart, the system suggests complementary components such as motherboard, SSD, power supply, case, RAM or cooling solutions.
+
+The recommendation system uses:
+
+- Cart product IDs
+- Product categories
+- Product manufacturers
+- Ollama with the Llama3 model
+- Local fallback logic if the AI response is unavailable
+
+### 🧠 AI PC Builder
+
+The application includes an AI-powered PC Builder assistant.
+
+Users can describe what type of PC they want, including budget, usage type, CPU preference, GPU preference and other requirements. The assistant analyzes the request and recommends a compatible PC configuration using only products available in the database.
+
+The AI Builder supports:
+
+- Conversation history
+- Budget detection
+- Usage detection: gaming, office, programming, video editing
+- Intel / AMD CPU preferences
+- NVIDIA / AMD GPU preferences
+- Product recommendations directly from the database
+- Add recommended products to cart
+
 ### 📑 Order Management
 
+Users can place orders using the products from their shopping cart.
+
+Order functionality includes:
+
 - Place order
+- View personal order history
+- Store billing and delivery information
+- View all orders as Admin
+- View order details as Admin
+- Edit orders as Admin
 
-- View user orders
+### 💳 Billing & Delivery
 
-- View all orders (Admin only)
+Authenticated users can save billing and delivery information before placing an order.
+
+The billing form includes:
+
+- Address
+- City
+- County
+- Country
+- Postal code
+
+These details are used during checkout and are displayed in the order details.
+
 
 ### 🔒 Security
 
@@ -178,6 +254,7 @@ src/
 | Database | MySQL |
 | Frontend | React |
 | HTTP Client | Axios |
+| AI Integration | Ollama + Llama3 |
 | Styling | CSS |
 | Build Tool | Maven |
 | Package Manager | npm |
@@ -208,7 +285,7 @@ Relationships:
 ### 1️⃣ Backend Setup
 ```bash
 Configure application.properties
-spring.datasource.url=jdbc:mysql://localhost:3306/magazin
+spring.datasource.url=jdbc:mysql://localhost:3306/magazin_online
 spring.datasource.username=root
 spring.datasource.password=your_password
 
