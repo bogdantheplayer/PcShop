@@ -142,6 +142,28 @@ Built using:
 ---
 
 ## 📂 Project Structure
+Backend (Spring Boot)
+```bash
+src/
+ ├── controller/
+ ├── service/
+ ├── repository/
+ ├── model/
+ ├── config/
+ ├── security/
+ └── MagazinApplication.java
+
+```
+
+Frontend (React)
+```bash
+src/
+ ├── components/
+ ├── context/
+ ├── App.js
+ └── index.js
+
+```
 
 ---
 
@@ -180,31 +202,7 @@ Relationships:
 
 ---
 
-## 📂 Project Structure
-Backend (Spring Boot)
-```bash
-src/
- ├── controller/
- ├── service/
- ├── repository/
- ├── model/
- ├── config/
- ├── security/
- └── MagazinApplication.java
 
-```
-
-Frontend (React)
-```bash
-src/
- ├── components/
- ├── context/
- ├── App.js
- └── index.js
-
-```
-
----
 
 ## ⚙ Installation & Setup
 ### 1️⃣ Backend Setup
