@@ -221,6 +221,8 @@ Built using:
 Backend (Spring Boot)
 ```bash
 src/
+ ├── ai/
+ ├── chatBot/
  ├── controller/
  ├── service/
  ├── repository/
@@ -233,9 +235,12 @@ src/
 
 Frontend (React)
 ```bash
+
 src/
  ├── components/
+ ├── pages/
  ├── context/
+ ├── services/
  ├── App.js
  └── index.js
 
@@ -312,6 +317,26 @@ Frontend runs on:
 http://localhost:3000
 ```
 
+### 3️⃣ AI Setup with Ollama
+
+The AI features require Ollama to run locally.
+
+Install Ollama and pull the Llama3 model:
+
+```bash
+ollama pull llama3
+```
+
+Start Ollama:
+```bash
+ollama serve
+```
+The backend sends AI requests to:
+
+```bash
+http://localhost:11434/api/chat
+```
+
 ---
 
 ## 🔑 Default Admin Account
@@ -341,7 +366,10 @@ Protected Endpoints
 
 - /api/cos/** → Authenticated users
 
+AI Endpoints
 
+- POST /api/recomandari/ai
+- POST /api/ai-builder/chat
 
 ---
 
