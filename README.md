@@ -70,6 +70,93 @@ Access is restricted to users with the ADMIN role.
 
 <img width="514"  alt="image" src="https://github.com/user-attachments/assets/4922a3e3-d9e4-40c8-ac34-07b3c22dfd03" />
 
+
+### ⭐ Wishlist
+
+
+Users can:
+
+- Save products for later
+- View all saved products
+- Remove products from the wishlist
+- Move products directly to the shopping cart
+
+<img width="1917" alt="image" src="https://github.com/user-attachments/assets/9644e7fa-4ff5-48d9-89cc-c3c235560c6b" />
+
+
+
+### 🛒 Shopping Cart
+
+Users can:
+
+- Add products to the cart
+- Update product quantities
+- Remove products from the cart
+- View the total order price
+- Proceed to checkout
+
+<img width="1897" alt="image" src="https://github.com/user-attachments/assets/bf165a25-32f3-46a3-a061-50a1f738dd07" />
+
+
+### 🤖 AI Product Recommendations
+
+The shopping cart includes AI-powered product recommendations.
+
+The recommendation engine:
+
+- Suggests complementary PC components
+- Analyzes the current shopping cart
+- Uses Ollama with the Llama3 model
+- Falls back to local recommendation logic if needed
+
+<img width="1893" alt="image" src="https://github.com/user-attachments/assets/1999ebdc-5e95-4aed-a57f-cd7e5a8595d4" />
+
+
+### 🧠 AI PC Builder
+
+Users can:
+
+- Describe the desired PC configuration
+- Specify a budget
+- Choose CPU and GPU preferences
+- Select the intended usage (gaming, office, programming, video editing)
+- Receive AI-generated product recommendations
+- Add recommended products directly to the shopping cart
+
+<img width="1898" alt="image" src="https://github.com/user-attachments/assets/daacb7a0-3b0b-4440-8638-5d83fb200a2a" />
+
+### 📄 Product Details
+
+
+Each product page displays:
+
+- Multiple product images
+- Complete technical specifications
+- Price and stock information
+- User ratings and reviews
+- Add to Cart and Wishlist actions
+
+<img width="1894" alt="image" src="https://github.com/user-attachments/assets/579b3162-f7a4-43dc-a7ed-e47ddab1a7be" />
+
+
+### 📦 Orders
+
+Authenticated users can:
+
+- View their order history
+- Review ordered products
+- View billing and delivery information
+
+Administrators can:
+
+- View all customer orders
+- Edit order information
+- Inspect order details
+
+<img width="1912" alt="image" src="https://github.com/user-attachments/assets/b41f33a4-cc23-4752-9a17-f0d383c8ee53" />
+
+
+
 ---
 
 ## 🚀 Features
