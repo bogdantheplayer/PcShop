@@ -498,7 +498,7 @@ Optional:
 ## Clone Repository
 
 ```bash
-git clone [https://...](https://github.com/bogdantheplayer/PcShop.git)
+git clone https://github.com/bogdantheplayer/PcShop.git
 ```
 
 
