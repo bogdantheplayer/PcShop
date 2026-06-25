@@ -1,7 +1,10 @@
 # PcShop - Full Stack Web Application
 
-PcShop is a full-stack web application designed to simulate a real-world e-commerce platform.
-It allows users to browse products, manage a shopping cart, place orders, and authenticate securely using JWT. Administrators have access to a protected dashboard for product management.
+PcShop is a full-stack web application designed to simulate a modern PC e-commerce platform.
+
+It allows users to browse products, manage a shopping cart, save products to a wishlist, receive AI-powered product recommendations, build custom PC configurations using an AI assistant, place orders, and authenticate securely using JWT.
+
+Administrators have access to a protected dashboard for managing products and customer orders.
 
 ---
 
@@ -281,6 +284,8 @@ Relationships:
 - One user can have multiple orders
 - One order can contain multiple products
 - Each user has a shopping cart
+- One user can have one wishlist
+- Products can belong to multiple orders
 
 ---
 
@@ -381,10 +386,11 @@ Make sure the following are installed:
 - Maven
 - Node.js (v18+ recommended)
 - MySQL Server (running locally on port 3306)
-
+- Ollama (for AI features)
+  
 Optional:
 - MySQL Workbench or any SQL client (for database management)
-
+- Git
 
 
 
