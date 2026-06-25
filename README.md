@@ -495,5 +495,31 @@ Optional:
 - Git
 
 
+## Clone Repository
+
+```bash
+git clone [https://...](https://github.com/bogdantheplayer/PcShop.git)
+```
 
 
+---
+
+## Running the Project
+
+Start the backend:
+
+```bash
+mvn spring-boot:run
+```
+
+Start the frontend:
+
+```bash
+npm start
+```
+
+Open:
+
+```bash
+http://localhost:3000
+```
