@@ -14,15 +14,30 @@ Administrators have access to a protected dashboard for managing products and cu
 
 
 
-Displays all available products including:
+Displays all available PC components in a modern card-based layout.
 
+Each product card includes:
+
+- Product image
 - Product name
-- Description
+- Category
+- Technical specifications
+- User rating
 - Price
-- Stock
 - Add to Cart button
+- Add to Wishlist button
 
-<img width="1917" alt="image" src="https://github.com/user-attachments/assets/64c1c32f-f32e-4b01-961b-c7f7e2eda3b5" />
+The page also provides:
+
+- Search by product name
+- Category filtering
+- Quick access to AI Builder
+- Wishlist
+- Shopping Cart
+- User account menu
+
+<img width="1896" alt="image" src="https://github.com/user-attachments/assets/41e1b046-ef62-4000-8512-cb228a736933" />
+
 
 
 ### 🔐 Authentication (Login & Register)
