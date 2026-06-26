@@ -54,7 +54,7 @@ Users can:
 <img width="439"  alt="image" src="https://github.com/user-attachments/assets/3491e166-ac39-423a-9c92-b2b710c99213" />
 
 
-### 🛠 Admin Dashboard
+### Admin Dashboard
 
 <img width="1919"  alt="image" src="https://github.com/user-attachments/assets/b9ca81eb-fe4d-4c3d-9a97-34e39ce516f4" />
 
