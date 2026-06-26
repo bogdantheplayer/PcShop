@@ -8,9 +8,9 @@ Administrators have access to a protected dashboard for managing products and cu
 
 ---
 
-## 📸 Application Interface
+## Application Interface
 
-### 🏠 Product Listing Page
+### Product Listing Page
 
 
 
@@ -40,7 +40,7 @@ The page also provides:
 
 
 
-### 🔐 Authentication (Login & Register)
+### Authentication (Login & Register)
 
 <img width="437"  alt="image" src="https://github.com/user-attachments/assets/688d0d22-6981-4730-b5d0-00c63cd244bc" />
 
@@ -71,7 +71,7 @@ Access is restricted to users with the ADMIN role.
 <img width="514"  alt="image" src="https://github.com/user-attachments/assets/4922a3e3-d9e4-40c8-ac34-07b3c22dfd03" />
 
 
-### ⭐ Wishlist
+### Wishlist
 
 
 Users can:
@@ -85,7 +85,7 @@ Users can:
 
 
 
-### 🛒 Shopping Cart
+### Shopping Cart
 
 Users can:
 
@@ -98,7 +98,7 @@ Users can:
 <img width="1897" alt="image" src="https://github.com/user-attachments/assets/bf165a25-32f3-46a3-a061-50a1f738dd07" />
 
 
-### 🤖 AI Product Recommendations
+### AI Product Recommendations
 
 The shopping cart includes AI-powered product recommendations.
 
@@ -112,7 +112,7 @@ The recommendation engine:
 <img width="1893" alt="image" src="https://github.com/user-attachments/assets/1999ebdc-5e95-4aed-a57f-cd7e5a8595d4" />
 
 
-### 🧠 AI PC Builder
+### AI PC Builder
 
 Users can:
 
@@ -125,7 +125,7 @@ Users can:
 
 <img width="1898" alt="image" src="https://github.com/user-attachments/assets/daacb7a0-3b0b-4440-8638-5d83fb200a2a" />
 
-### 📄 Product Details
+### Product Details
 
 
 Each product page displays:
@@ -139,7 +139,7 @@ Each product page displays:
 <img width="1894" alt="image" src="https://github.com/user-attachments/assets/579b3162-f7a4-43dc-a7ed-e47ddab1a7be" />
 
 
-### 📦 Orders
+### Orders
 
 Authenticated users can:
 
@@ -159,9 +159,9 @@ Administrators can:
 
 ---
 
-## 🚀 Features
+## Features
 
-### 🔐 Authentication & Authorization (JWT)
+### Authentication & Authorization (JWT)
 - User registration
 - Secure login
 - Role-based access control (USER, ADMIN)
@@ -169,7 +169,7 @@ Administrators can:
 - Protected /api/admin/** endpoints
 - /api/auth/me endpoint to retrieve current user details
 
-### 📦 Product Management
+### Product Management
 
 - Public product listing
 - Create product (Admin only)
@@ -186,7 +186,7 @@ Each product contains:
 - Manufacturer
 - Specifications
 
-### ⭐ Wishlist
+### Wishlist
 
 Users can save products to a wishlist in order to access them later.
 
@@ -197,7 +197,7 @@ Wishlist functionality allows users to:
 - Remove products from wishlist
 - Move products from wishlist to cart
 
-### 📝 Product Details & Reviews
+### Product Details & Reviews
 
 Each product has a dedicated details page where users can view more information before adding it to the cart.
 
@@ -212,7 +212,7 @@ The product details page includes:
 - Technical specifications
 - User reviews
 
-### 🛒 Shopping Cart
+### Shopping Cart
 
 - Add product to cart
 
@@ -221,7 +221,7 @@ The product details page includes:
 - Remove product from cart
 
 
-### 🤖 AI Product Recommendations
+### AI Product Recommendations
 
 The shopping cart includes AI-based product recommendations.
 
@@ -235,7 +235,7 @@ The recommendation system uses:
 - Ollama with the Llama3 model
 - Local fallback logic if the AI response is unavailable
 
-### 🧠 AI PC Builder
+### AI PC Builder
 
 The application includes an AI-powered PC Builder assistant.
 
@@ -251,7 +251,7 @@ The AI Builder supports:
 - Product recommendations directly from the database
 - Add recommended products to cart
 
-### 📑 Order Management
+### Order Management
 
 Users can place orders using the products from their shopping cart.
 
@@ -264,7 +264,7 @@ Order functionality includes:
 - View order details as Admin
 - Edit orders as Admin
 
-### 💳 Billing & Delivery
+### Billing & Delivery
 
 Authenticated users can save billing and delivery information before placing an order.
 
@@ -279,7 +279,7 @@ The billing form includes:
 These details are used during checkout and are displayed in the order details.
 
 
-### 🔒 Security
+### Security
 
 The backend uses:
 
@@ -297,7 +297,7 @@ The backend uses:
 
 
 
-### 🧠 Backend Architecture
+### Backend Architecture
 
 The backend follows a layered architecture:
 ```bash
@@ -322,7 +322,7 @@ Built using:
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 Backend (Spring Boot)
 ```bash
 src/
@@ -353,7 +353,7 @@ src/
 
 ---
 
-## 🧩 Tech Stack
+## Tech Stack
 
 | Component | Technology |
 |------------|------------|
@@ -371,7 +371,7 @@ src/
 
 ---
 
-## 🗄 Database Structure
+## Database Structure
 
 Main tables:
 
@@ -393,8 +393,8 @@ Relationships:
 
 
 
-## ⚙ Installation & Setup
-### 1️⃣ Backend Setup
+## Installation & Setup
+###  Backend Setup
 ```bash
 Configure application.properties
 spring.datasource.url=jdbc:mysql://localhost:3306/magazin_online
@@ -413,7 +413,7 @@ Server runs on:
 ```bash
 http://localhost:8080
 ```
-### 2️⃣ Frontend Setup
+### Frontend Setup
 ```bash
 npm install
 npm start
@@ -424,7 +424,7 @@ Frontend runs on:
 http://localhost:3000
 ```
 
-### 3️⃣ AI Setup with Ollama
+### AI Setup with Ollama
 
 The AI features require Ollama to run locally.
 
@@ -446,7 +446,7 @@ http://localhost:11434/api/chat
 
 ---
 
-## 🔑 Default Admin Account
+## Default Admin Account
 
 On application startup, a default admin account is automatically created:
 ```bash
@@ -456,7 +456,7 @@ Password: admin123
 
 ---
 
-## 🔄 API Overview
+## API Overview
 Public Endpoints
 
 - GET /api/produse
