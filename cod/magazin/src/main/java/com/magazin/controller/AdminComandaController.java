@@ -22,6 +22,12 @@ public class AdminComandaController {
         return comandaRepository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public Comanda getById(@PathVariable Long id) {
+        return comandaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Comanda nu există"));
+    }
+
     @PutMapping("/{id}")
     public Comanda update(@PathVariable Long id, @RequestBody Comanda updated) {
         Comanda c = comandaRepository.findById(id)
