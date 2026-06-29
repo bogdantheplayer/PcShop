@@ -394,6 +394,43 @@ Relationships:
 
 
 ## Installation & Setup
+
+### Database Setup
+
+Before running the backend, create a MySQL database.
+
+Using MySQL Workbench or any SQL client, execute:
+
+```sql
+CREATE DATABASE magazin_online;
+```
+
+The application uses:
+
+- Database name: magazin_online
+- Port: 3306
+
+Spring Boot will automatically create all required tables on first startup because:
+
+```properties
+spring.jpa.hibernate.ddl-auto=update
+```
+
+
+
+
+### First Startup
+
+When the backend starts for the first time:
+
+- Spring Boot automatically creates all database tables.
+- A default administrator account is inserted.
+- Product tables become ready for use.
+
+
+
+
+
 ###  Backend Setup
 ```bash
 Configure application.properties
@@ -403,8 +440,17 @@ spring.datasource.password=your_password
 
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
+server.port=8080
 ```
-Run Backend
+
+Navigate to the backend folder:
+
+```bash
+cd backend
+```
+
+Run:
+
 ```bash
 mvn spring-boot:run
 ```
@@ -414,8 +460,21 @@ Server runs on:
 http://localhost:8080
 ```
 ### Frontend Setup
+Navigate to the React application:
+
+```bash
+cd frontend
+```
+
+Install dependencies:
+
 ```bash
 npm install
+```
+
+Start:
+
+```bash
 npm start
 ```
 
@@ -501,25 +560,3 @@ Optional:
 git clone https://github.com/bogdantheplayer/PcShop.git
 ```
 
-
----
-
-## Running the Project
-
-Start the backend:
-
-```bash
-mvn spring-boot:run
-```
-
-Start the frontend:
-
-```bash
-npm start
-```
-
-Open:
-
-```bash
-http://localhost:3000
-```
